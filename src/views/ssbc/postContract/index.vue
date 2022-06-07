@@ -15,7 +15,7 @@
       <el-col :span="22" :offset="1" :xs="24">
         <el-form label-width="80px">
 
-          <el-form-item label="发起地址">
+          <el-form-item :label-width="'180px'" :label="$t('contractRelease.originatingAddress')">
             <el-select v-model="form.account" style="width: 100%" class="filter-item">
               <el-option
                 v-for="user in userList"
@@ -26,20 +26,20 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="私钥">
+          <el-form-item :label-width="'180px'" :label="$t('contractRelease.privateKey')">
             <el-input v-model="form.private_key" :disabled="true" />
           </el-form-item>
-          <el-form-item label="公钥">
+          <el-form-item :label-width="'180px'" :label="$t('contractRelease.publicKey')">
             <el-input v-model="form.public_key" :disabled="true" />
           </el-form-item>
-          <el-form-item label="合约名称">
+          <el-form-item :label-width="'180px'" :label="$t('contractRelease.contractName')">
             <el-input v-model="form.name" oninput="this.value=this.value.replace(/[^[a-z0-9A-Z]/g,'')" @input="lengthRestriction" />
           </el-form-item>
-          <el-form-item label="合约生成">
+          <el-form-item :label-width="'180px'" :label="$t('contractRelease.contractGeneration')">
             <el-collapse accordion>
               <el-collapse-item>
-                <template slot="title">非必选项，上传模型，生成智能合约框架代码</template>
-                <el-form-item label="本体模型">
+                <template slot="title">{{$t('contractRelease.contractGenerationInfo')}}</template>
+                <el-form-item :label="$t('contractRelease.ontologyModel')">
                   <!--todo 上传地址应拼接-->
                   <el-upload
                     class="upload"
@@ -50,10 +50,10 @@
                     :on-exeed="handleExceed"
                     :file-list="fileList"
                   >
-                    <el-button type="primary" size="small">点击上传</el-button>
+                    <el-button type="primary" size="small">{{$t('contractRelease.upload')}}</el-button>
                   </el-upload>
                 </el-form-item>
-                <el-form-item label="bpmn模型">
+                <el-form-item :label="$t('contractRelease.bpmnModel')">
                   <!--todo 上传地址应拼接-->
                   <el-upload
                     name="bpmn"

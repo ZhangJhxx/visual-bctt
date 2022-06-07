@@ -1,7 +1,7 @@
 <template>
   <el-card style="margin-bottom:20px;">
     <div slot="header" class="clearfix">
-      <span>个人中心</span>
+      <span>{{$t('usercard.header')}}</span>
     </div>
 
     <div class="user-profile">
@@ -31,44 +31,44 @@
       </div>
 
       <div class="user-education user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>简介</span></div>
+        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>{{$t('usercard.brief')}}</span></div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            现代服务可信交易平台
+            {{$t('usercard.intro')}}
           </div>
         </div>
       </div>
 
       <div class="user-skills user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>进度</span></div>
+        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>{{$t('usercard.progress')}}</span></div>
         <div class="user-bio-section-body">
           <div class="progress-item">
-            <span>项目构建与标准化</span>
+            <span>{{$t('usercard.progress_1')}}</span>
             <el-progress :percentage="100" status="success" />
             <br>
           </div>
           <div class="progress-item">
-            <span>登录、角色控制</span>
+            <span>{{$t('usercard.progress_2')}}</span>
             <el-progress :percentage="100" status="success" />
             <br>
           </div>
           <div class="progress-item">
-            <span>行业信用指标可视化</span>
+            <span>{{$t('usercard.progress_3')}}</span>
             <el-progress :percentage="90" />
             <br>
           </div>
           <div class="progress-item">
-            <span>交易记录表</span>
+            <span>{{$t('usercard.progress_4')}}</span>
             <el-progress :percentage="90" />
             <br>
           </div>
           <div class="progress-item">
-            <span>交易、区块、地址信息展示</span>
+            <span>{{$t('usercard.progress_5')}}</span>
             <el-progress :percentage="90" />
             <br>
           </div>
           <div class="progress-item">
-            <span>智能合约编辑</span>
+            <span>{{$t('usercard.progress_6')}}</span>
             <el-progress :percentage="100" status="success" />
             <br>
           </div>

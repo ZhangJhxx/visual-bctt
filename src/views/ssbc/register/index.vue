@@ -4,7 +4,7 @@
     <el-form-item></el-form-item>
     <el-form-item></el-form-item>
 
-    <el-form-item label="当前链" label-width="25%">
+    <el-form-item :label="$t('userManagement.currentChain')" label-width="25%">
       <el-col :span="12">
         <el-select v-model="sourceChain" style="width: 100%" class="filter-item">
           <el-option v-for="chainId in chainList" :key="chainId" :label="chainId" :value="chainId" @click.native="chooseChain(chainId)" />
@@ -12,7 +12,7 @@
       </el-col>
     </el-form-item>
 
-    <el-form-item label="当前账户" label-width="25%">
+    <el-form-item :label="$t('userManagement.currentAccount')" label-width="25%">
       <el-col :span="12">
         <el-select v-model="currentUserInfo.AccountAddress" style="width: 100%" class="filter-item">
           <el-option v-for="user in userList" :key="user.address" :label="user.address" :value="user.address" @click.native="choose(user)" />
@@ -20,35 +20,35 @@
       </el-col>
       <el-col :span="2" :offset="1">
         <el-button type="primary" icon="el-icon-document" @click="handleCopy(currentUserInfo.AccountAddress,$event)">
-          复制
+          {{$t('userManagement.copy')}}
         </el-button>
       </el-col>
     </el-form-item>
 
-    <el-form-item label="私钥" label-width="25%">
+    <el-form-item :label="$t('userManagement.privateKey')" label-width="25%">
       <el-col :span="12">
         <el-input v-model="currentUserInfo.PrivateKey" :disabled="true" />
       </el-col>
       <el-col :span="2" :offset="1">
         <el-button type="primary" icon="el-icon-document" @click="handleCopy(currentUserInfo.PrivateKey,$event)">
-          复制
+          {{$t('userManagement.copy')}}
         </el-button>
       </el-col>
     </el-form-item>
-    <el-form-item label="公钥" label-width="25%">
+    <el-form-item :label="$t('userManagement.publicKey')" label-width="25%">
       <el-col :span="12">
         <el-input v-model="currentUserInfo.PublicKey" :disabled="true" />
       </el-col>
       <el-col :span="2" :offset="1">
         <el-button type="primary" icon="el-icon-document" @click="handleCopy(currentUserInfo.PublicKey,$event)">
-          复制
+          {{$t('userManagement.copy')}}
         </el-button>
       </el-col>
     </el-form-item>
     <el-form-item>
       <el-row>
         <el-col :span="10" :offset="9">
-          <el-button type="primary" style="alignment: center; width:30% " @click="registerAccount" :disabled="disable">注册新账户</el-button>
+          <el-button type="primary" style="alignment: center; width:30% " @click="registerAccount" :disabled="disable">{{$t('userManagement.register')}}</el-button>
         </el-col>
       </el-row>
     </el-form-item>

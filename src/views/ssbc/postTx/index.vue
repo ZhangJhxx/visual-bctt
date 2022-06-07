@@ -13,7 +13,9 @@
           :rules="rules"
         >
 
-          <el-form-item label="发起地址">
+          <el-form-item 
+          :label="$t('postTransation.originatingAddress')"
+          :label-width="'180px'">
             <el-select
               v-model="form.from"
               style="width: 100%"
@@ -27,21 +29,22 @@
                 @click.native="chooseSender(user)"
               />
             </el-select>
+    
           </el-form-item>
 
-          <el-form-item label="私钥">
+          <el-form-item :label="$t('postTransation.privateKey')" :label-width="'180px'">
             <el-input
               v-model="form.private_key"
               :disabled="true"
             />
           </el-form-item>
-          <el-form-item label="公钥">
+          <el-form-item :label="$t('postTransation.publicKey')" :label-width="'180px'">
             <el-input
               v-model="form.public_key"
               :disabled="true"
             />
           </el-form-item>
-          <el-form-item label="接收地址">
+          <el-form-item :label="$t('postTransation.receivingAddress')" :label-width="'180px'">
             <el-select
               v-model="form.to"
               style="width: 100%"
@@ -56,7 +59,8 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            label="金额"
+            :label="$t('postTransation.amount')"
+            :label-width="'180px'"
             prop="figure"
           >
             <el-input
@@ -66,10 +70,11 @@
           </el-form-item>
         </el-form>
         <el-button
+        style="margin-left: 180px"
           type="primary"
           :disabled="disable"
           @click="postTran"
-        >发起交易</el-button>
+        >{{$t('postTransation.initiateTransaction')}}</el-button>
       </el-col>
     </el-row>
   </div>

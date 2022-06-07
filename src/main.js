@@ -16,6 +16,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import i18n from './lang'
+
 
 /**
  * If you don't want to use mock-server
@@ -32,6 +34,9 @@ if (process.env.NODE_ENV === 'production') {
 
 Vue.use(ElementUI)
 Vue.use(VueCodeMirror)
+Vue.use(ElementUI, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 
 Vue.config.productionTip = false
 
@@ -39,5 +44,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })

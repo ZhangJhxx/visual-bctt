@@ -1,9 +1,27 @@
 <template>
   <div class="login-container">
+    <!-- dropdown -->
+     <el-dropdown
+      @command="handleSetLanguage"
+      size="medium"
+      split-button
+      style="float: right;"
+    >
+    <span>{{ $t("login.toggle")}}</span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item :disabled="language === 'zh'" command="zh">
+          中文
+        </el-dropdown-item>
+        <el-dropdown-item :disabled="language === 'en'" command="en">
+          English
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <!-- dropdown -->
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
-      <div class="title-container">
-        <h3 class="title">登录</h3>
+      <div class="title-container">input
+        <h3 class="title">{{$t('login.title')}}</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,24 +59,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">用户名: regulator</span>-->
-<!--        <span> 密码: any</span>-->
-<!--      </div>-->
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">用户名: provider </span>-->
-<!--        <span> 密码: any</span>-->
-<!--      </div>-->
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">用户名: consumer</span>-->
-<!--        <span> 密码: any</span>-->
-<!--      </div>-->
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">用户名: banker</span>-->
-<!--        <span> 密码: any</span>-->
-<!--      </div>-->
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{$t('login.login')}}</el-button>
 
     </el-form>
   </div>
@@ -86,6 +87,7 @@ export default {
       }
     }
     return {
+      language:this.$store.state.language,
       loginForm: {
         username: 'regulator',
         password: '123456'
@@ -108,6 +110,11 @@ export default {
     }
   },
   methods: {
+    handleSetLanguage(command){
+      this.language = command;
+      this.$i18n.locale = command;
+      this.$store.commit('set_language', command);
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -196,9 +203,13 @@ $light_gray:#eee;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+  position: relative;
 
   .login-form {
-    position: relative;
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    transform: translate(-50%);
     width: 520px;
     max-width: 100%;
     padding: 160px 35px 0;

@@ -9,13 +9,23 @@ import user from './modules/user'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  state: {
+    language: 'zh'
+  },
+  mutations:{
+    set_language(state,language) {
+      state.language = language;
+    }
+  },
   modules: {
     app,
     permission,
     settings,
     user
   },
-  getters
+  getters:{
+    ...getters,
+  }
 })
 
 export default store

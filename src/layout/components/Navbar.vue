@@ -1,38 +1,70 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
 
-<!--      <el-link type="info" class="right-menu-item">{{ user.name }}</el-link>-->
-<!--      <el-link type="info" class="right-menu-item">-->
-<!--        <router-link to="/docs/index"> 文档 </router-link>-->
-<!--      </el-link>-->
-
+      <!--      <el-link type="info" class="right-menu-item">{{ user.name }}</el-link>-->
+      <!--      <el-link type="info" class="right-menu-item">-->
+      <!--        <router-link to="/docs/index"> 文档 </router-link>-->
+      <!--      </el-link>-->
+      <div class="right-menu-item">
+        <div class="locale-changer">
+          <select v-model="$i18n.locale" @change="changeLocal">
+            <option
+              v-for="(lang, i) in langs"
+              :key="`Lang${i}`"
+              :value="lang"
+            >
+              {{ lang }}
+            </option>
+          </select>
+        </div>
+      </div>
       <div class="right-menu-item" />
-      <el-dropdown class="avatar-container" trigger="click">
+
+      <el-dropdown
+        class="avatar-container"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img
+            :src="avatar+'?imageView2/1/w/80/h/80'"
+            class="user-avatar"
+          >
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-<!--          <el-dropdown-item>-->
-<!--            {{ user.name }}-->
-<!--          </el-dropdown-item>-->
+        <el-dropdown-menu
+          slot="dropdown"
+          class="user-dropdown"
+        >
+          <!--          <el-dropdown-item>-->
+          <!--            {{ user.name }}-->
+          <!--          </el-dropdown-item>-->
 
-<!--          <router-link to="/profile/index">-->
-<!--            <el-dropdown-item>-->
-<!--              个人主页-->
-<!--            </el-dropdown-item>-->
-<!--          </router-link>-->
+          <!--          <router-link to="/profile/index">-->
+          <!--            <el-dropdown-item>-->
+          <!--              个人主页-->
+          <!--            </el-dropdown-item>-->
+          <!--          </router-link>-->
 
-          <a target="_blank" href="https://github.com/wang-sicheng/visual-bctt">
-            <el-dropdown-item>代码仓库</el-dropdown-item>
+          <a
+            target="_blank"
+            href="https://github.com/wang-sicheng/visual-bctt"
+          >
+            <el-dropdown-item>{{$t('navbar.repository')}}</el-dropdown-item>
           </a>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出登录</span>
+          <el-dropdown-item
+            divided
+            @click.native="logout"
+          >
+            <span style="display:block;">{{$t('navbar.sign_out')}}</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -41,45 +73,45 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
   },
   data() {
     return {
-      user: {}
-    }
+      user: {},
+      langs: ["en", "zh"],
+    };
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar',
-      'name'
-    ])
+    ...mapGetters(["sidebar", "avatar", "name"]),
   },
   created() {
-    this.getUser()
+    this.getUser();
   },
   methods: {
     getUser() {
       this.user = {
-        name: this.name
-      }
+        name: this.name,
+      };
+    },
+    changeLocal(){
+      this.$store.commit("set_language", this.$i18n.locale);
     },
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch("app/toggleSideBar");
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
-  }
-}
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -88,18 +120,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -126,10 +158,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

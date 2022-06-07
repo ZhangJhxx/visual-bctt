@@ -15,24 +15,32 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
   },
 
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
+    hidden: true,
   },
 
   {
     path: '/',
     component: Layout,
     redirect: '/getfromchain/register',
+
     children: [{
       path: 'dashboard',
       name: '首页',
       component: () => import('@/views/profile/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: {
+        zh: {
+          title: '首页'
+        }, en: {
+          title: 'Home Page'
+        },
+        icon: 'dashboard'
+      }
     }]
   }
   // {
@@ -141,25 +149,52 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/getfromchain',
     name: 'getfromchain',
-    meta: { title: 'SSBC', icon: 'doc' },
+    meta: {
+      zh: {
+        title: 'SSBC'
+      }, en: {
+        title: 'SSBC'
+      }, icon: 'doc'
+    },
     children: [
       {
         path: 'register',
         name: 'register',
         component: () => import('@/views/ssbc/register/index'),
-        meta: { title: '用户管理' }
+        meta: {
+          // title: '用户管理',
+          zh: {
+            title: '用户管理'
+          }, en: {
+            title: 'User Management'
+          }
+        }
       },
       {
         path: 'postTran',
         name: 'postTran',
         component: () => import('@/views/ssbc/postTx/index'),
-        meta: { title: '发起转账' }
+        meta: {
+          // title: '发起转账',
+          zh: {
+            title: '发起转账'
+          }, en: {
+            title: 'Post Transaction'
+          }
+        }
       },
       {
         path: 'Contract',
         name: 'Contract',
         component: () => import('@/views/ssbc/postContract/index'),
-        meta: { title: '发布合约' }
+        meta: {
+          // title: '发布合约',
+          zh: {
+            title: '发布合约'
+          }, en: {
+            title: 'Contract Release'
+          }
+        }
       },
       // {
       //   path: 'updateContract',
@@ -171,37 +206,79 @@ export const asyncRoutes = [
         path: 'invokeSmartContract',
         name: 'invokeSmartContract',
         component: () => import('@/views/ssbc/invokeSmartContract/index'),
-        meta: { title: '调用合约' }
+        meta: {
+          // title: '调用合约',
+          zh: {
+            title: '调用合约'
+          }, en: {
+            title: 'Call Contract'
+          }
+        }
       },
       {
         path: 'contractInfo',
         name: 'contractInfo',
         component: () => import('@/views/ssbc/contractInfo/index'),
-        meta: { title: '合约数据' }
+        meta: {
+          // title: '合约数据',
+          zh: {
+            title: '合约数据'
+          }, en: {
+            title: 'Contract Data'
+          }
+        }
       },
       {
         path: 'getAllEvents',
         name: 'getAllEvents',
         component: () => import('@/views/ssbc/getAllEvents/index'),
-        meta: { title: '事件数据' }
+        meta: {
+          // title: '事件数据',
+          zh: {
+            title: '事件数据'
+          }, en: {
+            title: 'Event Data'
+          }
+        }
       },
       {
         path: 'getBlockChain',
         name: 'getBlockChain',
         component: () => import('@/views/ssbc/getBlockChain/index'),
-        meta: { title: '区块列表' }
+        meta: {
+          // title: '区块列表',
+          zh: {
+            title: '区块列表'
+          }, en: {
+            title: 'Block List'
+          }
+        }
       },
       {
         path: 'getAllTrans',
         name: 'getAllTrans',
         component: () => import('@/views/ssbc/getAllTxs/index'),
-        meta: { title: '交易列表' }
+        meta: {
+          // title: '交易列表',
+          zh: {
+            title: '交易列表'
+          }, en: {
+            title: 'Transaction List'
+          }
+        }
       },
       {
         path: 'getAllAccounts',
         name: 'getAllAccounts',
         component: () => import('@/views/ssbc/getAllAccounts/index'),
-        meta: { title: '账户列表' }
+        meta: {
+          // title: '账户列表',
+          zh: {
+            title: '账户列表'
+          }, en: {
+            title: 'Account List'
+          }
+        }
       }
     ]
   },
