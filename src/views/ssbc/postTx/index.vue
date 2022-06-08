@@ -5,17 +5,18 @@
       <el-col
         :span="22"
         :offset="1"
-        :xs="24"
+        :xs="{span:24,offset:0}"
       >
         <el-form
-          label-width="80px"
+          label-width="auto"
           :model="form"
           :rules="rules"
+          ref="form"
         >
 
-          <el-form-item 
-          :label="$t('postTransation.originatingAddress')"
-          :label-width="'180px'">
+          <el-form-item
+            :label="$t('postTransation.originatingAddress')"
+          >
             <el-select
               v-model="form.from"
               style="width: 100%"
@@ -29,22 +30,30 @@
                 @click.native="chooseSender(user)"
               />
             </el-select>
-    
+
           </el-form-item>
 
-          <el-form-item :label="$t('postTransation.privateKey')" :label-width="'180px'">
+          <el-form-item
+            :label="$t('postTransation.privateKey')"
+          >
             <el-input
               v-model="form.private_key"
               :disabled="true"
             />
           </el-form-item>
-          <el-form-item :label="$t('postTransation.publicKey')" :label-width="'180px'">
+          <el-form-item
+            :label="$t('postTransation.publicKey')"
+          >
             <el-input
               v-model="form.public_key"
               :disabled="true"
             />
           </el-form-item>
-          <el-form-item :label="$t('postTransation.receivingAddress')" :label-width="'180px'">
+          <el-form-item
+            prop="to"
+            :label="$t('postTransation.receivingAddress')"
+            required
+          >
             <el-select
               v-model="form.to"
               style="width: 100%"
@@ -60,20 +69,19 @@
           </el-form-item>
           <el-form-item
             :label="$t('postTransation.amount')"
-            :label-width="'180px'"
-            prop="figure"
+            prop="value"
+            required
           >
             <el-input
-              v-model="form.figure"
+              v-model="form.value"
               maxlength="10"
             />
           </el-form-item>
         </el-form>
         <el-button
-        style="margin-left: 180px"
           type="primary"
           :disabled="disable"
-          @click="postTran"
+          @click="submitForm('form')"
         >{{$t('postTransation.initiateTransaction')}}</el-button>
       </el-col>
     </el-row>
@@ -86,7 +94,6 @@ import { query, postTran } from "@/api/ssbc";
 
 export default {
   data() {
-    
     return {
       q: {
         type: "getAllAccounts",
@@ -99,7 +106,7 @@ export default {
         from: "",
         to: "",
         contract: "",
-        figure: 100,
+        value: 100,
         method: "",
         dest: "",
         args: "{}",
@@ -107,7 +114,14 @@ export default {
       },
       disable: false,
       rules: {
-        figure: [{ validator: this.validateFigure, trigger: "blur" }],
+        value: [
+          { required: true, message: "请输入转账金额", trigger: "blur" },
+          { validator: this.validateValue, trigger: "blur" },
+        ],
+        to: [
+          { required: true, message: "请输入转账地址", trigger: "change" },
+          { validator: this.validateToAddress, trigger: "change" },
+        ],
       },
     };
   },
@@ -115,54 +129,108 @@ export default {
     this.getAllAccounts();
   },
   methods: {
-    validateFigure(rule, value, callback){
+    //检查用户输入金额是否为大于0的整数
+    validateValue(rule, value, callback) {
       const reg = /^\d+$/g;
       if (value === "" || value === "0") {
-        this.disable=true;
+        this.disable = true;
         callback(new Error("金额需大于0"));
       } else if (!reg.test(value)) {
-         this.disable=true;
+        this.disable = true;
         callback(new Error("金额需为正整数"));
-      }else{
-        this.disable=false;
+      } else {
+        this.disable = false;
         callback();
       }
     },
-    postTran() {
+    //检查选择转账地址是否和发起地址一致
+    validateToAddress(rule, value, callback) {
+      if (value === this.form.from) {
+        this.disable = true;
+        callback(new Error("接收地址不能与发起地址一致"));
+      } else {
+        this.disable = false;
+        callback();
+      }
+    },
+    submitForm(formName) {
       this.disable = true;
       setTimeout(() => {
         this.disable = false;
       }, 1000);
-      this.$confirm(
-        `<div>
-          <span>是否向地址</span>
-          <i>${this.form.to}</i>
-          <br>
-          <span>转账${this.form.figure}</span>
-        </div>`,
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          dangerouslyUseHTMLString: true,
-        }
-      ).then(() => {
-        postTran(this.form).then((res) => {
-          if (res.error === "") {
-            this.$message({
-              message: "成功提交",
-              type: "success",
-            });
-          } else {
-            this.$message({
-              message: res.error,
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$confirm(
+            `<div>
+              <span>是否向地址</span>
+              <i>${this.form.to}</i>
+              <br>
+              <span>转账${this.form.value}</span>
+            </div>`,
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
               type: "warning",
+              dangerouslyUseHTMLString: true,
+            }
+          ).then(() => {
+            postTran(this.form).then((res) => {
+              if (res.error === "") {
+                this.$message({
+                  message: "成功提交",
+                  type: "success",
+                });
+              } else {
+                this.$message({
+                  message: res.error,
+                  type: "warning",
+                });
+              }
             });
-          }
-        });
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
       });
     },
+    // postTran() {
+    //   this.disable = true;
+    //   setTimeout(() => {
+    //     this.disable = false;
+    //   }, 1000);
+
+    //   this.$confirm(
+    //     `<div>
+    //       <span>是否向地址</span>
+    //       <i>${this.form.to}</i>
+    //       <br>
+    //       <span>转账${this.form.value}</span>
+    //     </div>`,
+    //     "提示",
+    //     {
+    //       confirmButtonText: "确定",
+    //       cancelButtonText: "取消",
+    //       type: "warning",
+    //       dangerouslyUseHTMLString: true,
+    //     }
+    //   ).then(() => {
+    //     postTran(this.form).then((res) => {
+    //       if (res.error === "") {
+    //         this.$message({
+    //           message: "成功提交",
+    //           type: "success",
+    //         });
+    //       } else {
+    //         this.$message({
+    //           message: res.error,
+    //           type: "warning",
+    //         });
+    //       }
+    //     });
+    //   });
+    // },
     getAllAccounts() {
       query(this.q).then((res) => {
         // 筛选出普通账户和智能合约账户

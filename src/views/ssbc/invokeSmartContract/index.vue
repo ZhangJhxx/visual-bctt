@@ -3,7 +3,7 @@
 
     <el-row :gutter="0">
       <el-col :span="22" :offset="1" :xs="24">
-        <el-form label-width="80px">
+        <el-form label-width="80px" :model="form" :rules="rules">
           <el-form-item label="发起地址">
             <el-select v-model="form.from" style="width: 100%" class="filter-item">
               <el-option v-for="user in userList" :key="user.address" :label="user.address" :value="user.address" @click.native="chooseSender(user)" />
@@ -16,7 +16,7 @@
           <el-form-item label="公钥">
             <el-input v-model="form.public_key" :disabled="true" />
           </el-form-item>
-          <el-form-item label="转账金额">
+          <el-form-item label="转账金额" prop="value">
             <el-input v-model.number="form.value" maxlength="10"/>
           </el-form-item>
           <el-form-item label="合约名称">
@@ -68,6 +68,11 @@ export default {
         type: 3
       },
       disable: false,
+      rules: {
+        value: [
+          { validator: this.validateValue, trigger: "blur" },
+        ],
+      },
       cmOption: {
         tabSize: 4,
         lineNumbers: true,
@@ -85,6 +90,16 @@ export default {
     this.getAllAccounts()
   },
   methods: {
+    validateValue(rule, value, callback) {
+      const reg = /^\d+$/g;
+      if (!reg.test(value)) {
+        this.disable = true;
+        callback(new Error("金额需为正整数"));
+      } else {
+        this.disable = false;
+        callback();
+      }
+    },
     invokeContract() {
       this.initWebSocket() // 调用合约时建立Websocket连接
       this.disable = true

@@ -13,9 +13,9 @@
     <br>
     <el-row :gutter="0">
       <el-col :span="22" :offset="1" :xs="24">
-        <el-form label-width="80px">
+        <el-form label-width="auto">
 
-          <el-form-item :label-width="'180px'" :label="$t('contractRelease.originatingAddress')">
+          <el-form-item :label="$t('contractRelease.originatingAddress')">
             <el-select v-model="form.account" style="width: 100%" class="filter-item">
               <el-option
                 v-for="user in userList"
@@ -26,16 +26,16 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item :label-width="'180px'" :label="$t('contractRelease.privateKey')">
+          <el-form-item :label="$t('contractRelease.privateKey')">
             <el-input v-model="form.private_key" :disabled="true" />
           </el-form-item>
-          <el-form-item :label-width="'180px'" :label="$t('contractRelease.publicKey')">
+          <el-form-item :label="$t('contractRelease.publicKey')">
             <el-input v-model="form.public_key" :disabled="true" />
           </el-form-item>
-          <el-form-item :label-width="'180px'" :label="$t('contractRelease.contractName')">
+          <el-form-item :label="$t('contractRelease.contractName')">
             <el-input v-model="form.name" oninput="this.value=this.value.replace(/[^[a-z0-9A-Z]/g,'')" @input="lengthRestriction" />
           </el-form-item>
-          <el-form-item :label-width="'180px'" :label="$t('contractRelease.contractGeneration')">
+          <el-form-item :label="$t('contractRelease.contractGeneration')">
             <el-collapse accordion>
               <el-collapse-item>
                 <template slot="title">{{$t('contractRelease.contractGenerationInfo')}}</template>
