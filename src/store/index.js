@@ -5,12 +5,13 @@ import app from './modules/app'
 import permission from './modules/permission'
 import settings from './modules/settings'
 import user from './modules/user'
+import account from './modules/account'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    language: 'zh'
+    language: 'en'
   },
   mutations:{
     set_language(state,language) {
@@ -21,7 +22,8 @@ const store = new Vuex.Store({
     app,
     permission,
     settings,
-    user
+    user,
+    account
   },
   getters:{
     ...getters,

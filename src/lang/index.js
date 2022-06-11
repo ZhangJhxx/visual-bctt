@@ -23,7 +23,6 @@ const messages = {
 const i18n = new VueI18n({
   // set locale
   // options: en or zh
-  locale: store.state.language || 'zh', // 默认显示英文 // set locale messages
   messages
 })
 export default i18n

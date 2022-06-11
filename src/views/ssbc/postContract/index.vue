@@ -1,7 +1,10 @@
 <template>
   <div class="app-container">
     <el-row :gutter="1">
-      <el-col :span="22" :offset="1">
+      <el-col
+        :span="22"
+        :offset="1"
+      >
         <el-alert
           title="智能合约编辑与上传"
           type="info"
@@ -12,11 +15,19 @@
     </el-row>
     <br>
     <el-row :gutter="0">
-      <el-col :span="22" :offset="1" :xs="24">
+      <el-col
+        :span="22"
+        :offset="1"
+        :xs="24"
+      >
         <el-form label-width="auto">
 
           <el-form-item :label="$t('contractRelease.originatingAddress')">
-            <el-select v-model="form.account" style="width: 100%" class="filter-item">
+            <el-select
+              v-model="form.account"
+              style="width: 100%"
+              class="filter-item"
+            >
               <el-option
                 v-for="user in userList"
                 :key="user.address"
@@ -27,13 +38,23 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('contractRelease.privateKey')">
-            <el-input v-model="form.private_key" :disabled="true" />
+            <el-input
+              v-model="form.private_key"
+              :disabled="true"
+            />
           </el-form-item>
           <el-form-item :label="$t('contractRelease.publicKey')">
-            <el-input v-model="form.public_key" :disabled="true" />
+            <el-input
+              v-model="form.public_key"
+              :disabled="true"
+            />
           </el-form-item>
           <el-form-item :label="$t('contractRelease.contractName')">
-            <el-input v-model="form.name" oninput="this.value=this.value.replace(/[^[a-z0-9A-Z]/g,'')" @input="lengthRestriction" />
+            <el-input
+              v-model="form.name"
+              oninput="this.value=this.value.replace(/[^[a-z0-9A-Z]/g,'')"
+              @input="lengthRestriction"
+            />
           </el-form-item>
           <el-form-item :label="$t('contractRelease.contractGeneration')">
             <el-collapse accordion>
@@ -50,7 +71,10 @@
                     :on-exeed="handleExceed"
                     :file-list="fileList"
                   >
-                    <el-button type="primary" size="small">{{$t('contractRelease.upload')}}</el-button>
+                    <el-button
+                      type="primary"
+                      size="small"
+                    >{{$t('contractRelease.upload')}}</el-button>
                   </el-upload>
                 </el-form-item>
                 <el-form-item :label="$t('contractRelease.bpmnModel')">
@@ -63,18 +87,32 @@
                     :on-exeed="handleExceed"
                     :file-list="fileList"
                   >
-                    <el-button type="primary" size="small">点击上传</el-button>
+                    <el-button
+                      type="primary"
+                      size="small"
+                    >点击上传</el-button>
                   </el-upload>
                 </el-form-item>
                 <el-form-item label=" ">
-                  <el-button type="primary" size="small" @click="codeGen">生成代码</el-button>
+                  <el-button
+                    type="primary"
+                    size="small"
+                    @click="codeGen"
+                  >生成代码</el-button>
                 </el-form-item>
               </el-collapse-item>
             </el-collapse>
           </el-form-item>
-          <codemirror v-model="form.code" :options="cmOption" />
+          <codemirror
+            v-model="form.code"
+            :options="cmOption"
+          />
           <el-form-item />
-          <el-button type="primary" :disabled="disable" @click="postContract">创建合约</el-button>
+          <el-button
+            type="primary"
+            :disabled="disable"
+            @click="postContract"
+          >创建合约</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -83,162 +121,199 @@
       :visible.sync="dialogVisible"
       width="60%"
     >
-      <span style="white-space: pre-wrap;" v-html="this.errMsg">{{ errMsg }}</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="dialogVisible = false">确 定</el-button>
+      <span
+        style="white-space: pre-wrap;"
+        v-html="this.errMsg"
+      >{{ errMsg }}</span>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="dialogVisible = false"
+        >确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import dedent from 'dedent'
-import { codemirror } from 'vue-codemirror'
+import dedent from "dedent";
+import { codemirror } from "vue-codemirror";
+import { mapState, mapMutations } from "vuex";
 // language
 // import 'codemirror/mode/javascript/javascript.js'
-import 'codemirror/mode/go/go.js'
-import AnsiUp from 'ansi_up'
+import "codemirror/mode/go/go.js";
+import AnsiUp from "ansi_up";
 // theme css
-import 'codemirror/theme/monokai.css'
+import "codemirror/theme/monokai.css";
 
-import Cookies from 'js-cookie'
-import { query, postContract, genCode } from '@/api/ssbc'
+import Cookies from "js-cookie";
+import { query, postContract, genCode } from "@/api/ssbc";
 
 export default {
   components: {
-    codemirror
+    codemirror,
   },
   data() {
     return {
-      errMsg: '',
+      errMsg: "",
       dialogVisible: false,
       q: {
-        type: 'getAllAccounts',
-        parameters: []
+        type: "getAllAccounts",
+        parameters: [],
       },
       userList: [],
       form: {
-        account: '',
-        private_key: '',
-        public_key: '',
-        name: '',
+        account: "",
+        private_key: "",
+        public_key: "",
+        name: "",
         type: 2,
-        code: dedent('package main\n' +
-          '\n' +
-          'var A int\n' +
-          'var B string\n' +
-          'var invisible string\n' +
-          '\n' +
-          'func init() {\n' +
-          '\tA = 0\n' +
-          '\tB = "init"\n' +
-          '\tinvisible = "init"\n' +
-          '}\n' +
-          '\n' +
-          'func Add(args map[string]interface{}) (interface{}, error) {\n' +
-          '\tA += 1\n' +
-          '\tB = "Add"\n' +
-          '\tinvisible = "Add"\n' +
-          '\treturn nil, nil\n' +
-          '}\n' +
-          '\n' +
-          'func Subtract(args map[string]interface{}) (interface{}, error) {\n' +
-          '\tA -= 1\n' +
-          '\tB = "Subtract"\n' +
-          '\tinvisible = "Subtract"\n' +
-          '\treturn nil, nil\n' +
-          '}')
+        code: dedent(
+          "package main\n" +
+            "\n" +
+            "var A int\n" +
+            "var B string\n" +
+            "var invisible string\n" +
+            "\n" +
+            "func init() {\n" +
+            "\tA = 0\n" +
+            '\tB = "init"\n' +
+            '\tinvisible = "init"\n' +
+            "}\n" +
+            "\n" +
+            "func Add(args map[string]interface{}) (interface{}, error) {\n" +
+            "\tA += 1\n" +
+            '\tB = "Add"\n' +
+            '\tinvisible = "Add"\n' +
+            "\treturn nil, nil\n" +
+            "}\n" +
+            "\n" +
+            "func Subtract(args map[string]interface{}) (interface{}, error) {\n" +
+            "\tA -= 1\n" +
+            '\tB = "Subtract"\n' +
+            '\tinvisible = "Subtract"\n' +
+            "\treturn nil, nil\n" +
+            "}"
+        ),
       },
       user: {},
       cmOption: {
         tabSize: 4,
         lineNumbers: true,
         line: true,
-        mode: 'text/x-go',
+        mode: "text/x-go",
         matchBrackets: true,
-        theme: 'monokai'
+        theme: "monokai",
       },
       disable: false,
-      fileList: []
-    }
+      fileList: [],
+    };
   },
   created() {
-    this.getAllAccounts()
+    this.getAllAccounts();
   },
   methods: {
+    ...mapMutations("account", ["SET_ACCOUNT"]),
     postContract() {
-      this.disable = true
+      this.disable = true;
       setTimeout(() => {
-        this.disable = false
-      }, 4000)
-      postContract(this.form).then(res => {
-        if (res.error === '') {
+        this.disable = false;
+      }, 4000);
+      postContract(this.form).then((res) => {
+        if (res.error === "") {
           this.$message({
-            message: '成功提交',
-            type: 'success'
-          })
+            message: "成功提交",
+            type: "success",
+          });
         } else {
-          var msg = res.error.replace(/\n/g, '\r\n')
-          var ansi_up = new AnsiUp()
-          this.errMsg = ansi_up.ansi_to_html(msg)
-          console.log(this.errMsg)
-          this.dialogVisible = true
+          var msg = res.error.replace(/\n/g, "\r\n");
+          var ansi_up = new AnsiUp();
+          this.errMsg = ansi_up.ansi_to_html(msg);
+          console.log(this.errMsg);
+          this.dialogVisible = true;
         }
-      })
+      });
     },
     getAllAccounts() {
-      query(this.q).then(res => {
+      query(this.q).then((res) => {
         // 筛选出普通账户和智能合约账户
-        const user = []
-        const contract = []
-        const total = res.data
-        total.forEach(function(r) {
+        const user = [];
+        const contract = [];
+        const total = res.data;
+        total.forEach(function (r) {
           if (!r.iscontract) {
-            user.push(r)
+            user.push(r);
           } else {
-            contract.push(r)
+            contract.push(r);
           }
-        })
-        this.userList = user
+        });
+        this.userList = user;
         if (user.length === 0) {
-          this.form.account = ''
-          this.form.private_key = ''
-          this.form.public_key = ''
-          Cookies.set('PublicKey', '')
-          Cookies.set('PrivateKey', '')
-          Cookies.set('AccountAddress', '')
+          this.form.account = "";
+          this.form.private_key = "";
+          this.form.public_key = "";
+          // Cookies.set('PublicKey', '')
+          // Cookies.set('PrivateKey', '')
+          // Cookies.set('AccountAddress', '')
+          this.SET_ACCOUNT({
+            PublicKey: "",
+            PrivateKey: "",
+            AccountAddress: "",
+          });
         } else {
-          this.form.account = Cookies.get('AccountAddress')
-          this.form.private_key = Cookies.get('PrivateKey')
-          this.form.public_key = Cookies.get('PublicKey')
+          // this.form.account = Cookies.get('AccountAddress')
+          // this.form.private_key = Cookies.get('PrivateKey')
+          // this.form.public_key = Cookies.get('PublicKey')
+          this.form.account = this.AccountAddress;
+          this.form.private_key = this.PrivateKey;
+          this.form.public_key = this.PublicKey;
         }
-      })
+      });
     },
     chooseSender(item) {
-      this.form.from = item.address
-      this.form.public_key = item.publickey
-      this.form.private_key = item.privatekey
+      this.form.from = item.address;
+      this.form.public_key = item.publickey;
+      this.form.private_key = item.privatekey;
 
-      Cookies.set('AccountAddress', item.address)
-      Cookies.set('PublicKey', item.publickey)
-      Cookies.set('PrivateKey', item.privatekey)
+      // Cookies.set("AccountAddress", item.address);
+      // Cookies.set("PublicKey", item.publickey);
+      // Cookies.set("PrivateKey", item.privatekey);
+      this.SET_ACCOUNT({
+        PublicKey: item.publickey,
+        PrivateKey: item.privatekey,
+        AccountAddress: item.address,
+      });
     },
     lengthRestriction() {
       // 限制长度
       if (this.form.name.length > 64) {
-        this.form.name = this.form.name.slice(0, 64)
+        this.form.name = this.form.name.slice(0, 64);
       }
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
     },
     codeGen() {
-      genCode().then(res => {
-        console.log(res)
-        this.form.code = dedent(res.data)
-      })
-      console.log('执行codeGen')
-    }
-  }
-}
+      genCode().then((res) => {
+        console.log(res);
+        this.form.code = dedent(res.data);
+      });
+      console.log("执行codeGen");
+    },
+  },
+  computed: {
+    ...mapState("account", {
+      PublicKey: (state) => state.PublicKey,
+      PrivateKey: (state) => state.PrivateKey,
+      AccountAddress: (state) => state.AccountAddress,
+    }),
+  },
+};
 </script>

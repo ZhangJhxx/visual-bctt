@@ -51,6 +51,7 @@ import 'codemirror/theme/monokai.css'
 
 import Cookies from 'js-cookie'
 import { query, postContract } from '@/api/ssbc'
+import { mapState, mapMutations } from "vuex";
 
 export default {
   components: {
@@ -99,6 +100,7 @@ func random(args map[string]string) (interface{}, error) {
     this.getAllAccounts()
   },
   methods: {
+    ...mapMutations("account", ["SET_ACCOUNT"]),
     postContract() {
       this.disable = true
       setTimeout(() => {
@@ -136,13 +138,22 @@ func random(args map[string]string) (interface{}, error) {
           this.form.account = ''
           this.form.private_key = ''
           this.form.public_key = ''
-          Cookies.set('PublicKey', '')
-          Cookies.set('PrivateKey', '')
-          Cookies.set('AccountAddress', '')
+          // Cookies.set('PublicKey', '')
+          // Cookies.set('PrivateKey', '')
+          // Cookies.set('AccountAddress', '')
+          this.SET_ACCOUNT({
+            PublicKey: "",
+            PrivateKey: "",
+            AccountAddress: "",
+          });
+          
         } else {
-          this.form.account = Cookies.get('AccountAddress')
-          this.form.private_key = Cookies.get('PrivateKey')
-          this.form.public_key = Cookies.get('PublicKey')
+          // this.form.account = Cookies.get('AccountAddress')
+          // this.form.private_key = Cookies.get('PrivateKey')
+          // this.form.public_key = Cookies.get('PublicKey')
+          this.form.account = this.AccountAddress;
+          this.form.private_key = this.PrivateKey;
+          this.form.public_key = this.PublicKey;
         }
       })
     },
@@ -151,10 +162,22 @@ func random(args map[string]string) (interface{}, error) {
       this.form.public_key = item.publickey
       this.form.private_key = item.privatekey
 
-      Cookies.set('AccountAddress', item.address)
-      Cookies.set('PublicKey', item.publickey)
-      Cookies.set('PrivateKey', item.privatekey)
+      // Cookies.set('AccountAddress', item.address)
+      // Cookies.set('PublicKey', item.publickey)
+      // Cookies.set('PrivateKey', item.privatekey)
+      this.SET_ACCOUNT({
+        PublicKey: item.publickey,
+        PrivateKey: item.privatekey,
+        AccountAddress: item.address,
+      });
     }
-  }
+  },
+  computed: {
+    ...mapState("account", {
+      PublicKey: (state) => state.PublicKey,
+      PrivateKey: (state) => state.PrivateKey,
+      AccountAddress: (state) => state.AccountAddress,
+    }),
+  },
 }
 </script>

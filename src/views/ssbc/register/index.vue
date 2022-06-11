@@ -139,6 +139,7 @@ import clip from "@/utils/clipboard";
 import Cookies from "js-cookie";
 import { query, registerAccount } from "@/api/ssbc";
 import { throttle } from "../../../utils/throttle";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -175,13 +176,14 @@ export default {
     );
   },
   methods: {
+    ...mapMutations("account", ["SET_ACCOUNT"]),
     handleCopy(text, event) {
       clip(text, event);
     },
     setButtonSize() {
       const buttons = document.querySelectorAll("button");
       const val = document.body.clientWidth;
-      console.log(val);
+      // console.log(val);
       const def = 768; // 默认宽度
       if (val < def) {
         buttons.forEach((item) => {
@@ -201,9 +203,14 @@ export default {
       registerAccount()
         .then((res) => {
           this.currentUserInfo = res.data;
-          Cookies.set("PublicKey", this.currentUserInfo.PublicKey);
-          Cookies.set("PrivateKey", this.currentUserInfo.PrivateKey);
-          Cookies.set("AccountAddress", this.currentUserInfo.AccountAddress);
+          // Cookies.set("PublicKey", this.currentUserInfo.PublicKey);
+          // Cookies.set("PrivateKey", this.currentUserInfo.PrivateKey);
+          // Cookies.set("AccountAddress", this.currentUserInfo.AccountAddress);
+          this.SET_ACCOUNT({
+            PublicKey: this.currentUserInfo.PublicKey,
+            PrivateKey: this.currentUserInfo.PrivateKey,
+            AccountAddress: this.currentUserInfo.AccountAddress,
+          });
           this.$message({
             message: "注册成功",
             type: "success",
@@ -233,13 +240,21 @@ export default {
           this.currentUserInfo.PrivateKey = "";
           this.currentUserInfo.PublicKey = "";
           this.currentUserInfo.AccountAddress = "";
-          Cookies.set("PublicKey", "");
-          Cookies.set("PrivateKey", "");
-          Cookies.set("AccountAddress", "");
+          // Cookies.set("PublicKey", "");
+          // Cookies.set("PrivateKey", "");
+          // Cookies.set("AccountAddress", "");
+             this.SET_ACCOUNT({
+            PublicKey: "",
+            PrivateKey: "",
+            AccountAddress: "",
+          });
         } else {
-          this.currentUserInfo.PrivateKey = Cookies.get("PrivateKey");
-          this.currentUserInfo.PublicKey = Cookies.get("PublicKey");
-          this.currentUserInfo.AccountAddress = Cookies.get("AccountAddress");
+          this.currentUserInfo.PrivateKey = this.PrivateKey;
+          this.currentUserInfo.PublicKey = this.PrivateKey;
+          this.currentUserInfo.AccountAddress = this.AccountAddress;
+          // this.currentUserInfo.PrivateKey = Cookies.get("PrivateKey");
+          // this.currentUserInfo.PublicKey = Cookies.get("PublicKey");
+          // this.currentUserInfo.AccountAddress = Cookies.get("AccountAddress");
         }
 
         // 判断存的地址是不是当前链的
@@ -252,9 +267,14 @@ export default {
           this.currentUserInfo.PublicKey = user[0].publickey;
           this.currentUserInfo.AccountAddress = user[0].address;
 
-          Cookies.set("AccountAddress", user[0].address);
-          Cookies.set("PublicKey", user[0].publickey);
-          Cookies.set("PrivateKey", user[0].privatekey);
+          // Cookies.set("AccountAddress", user[0].address);
+          // Cookies.set("PublicKey", user[0].publickey);
+          // Cookies.set("PrivateKey", user[0].privatekey);
+          this.SET_ACCOUNT({
+            PublicKey: user[0].publickey,
+            PrivateKey: user[0].privatekey,
+            AccountAddress: user[0].address,
+          });
         }
       });
     },
@@ -264,15 +284,27 @@ export default {
       this.currentUserInfo.PublicKey = item.publickey;
       this.currentUserInfo.PrivateKey = item.privatekey;
 
-      Cookies.set("AccountAddress", item.address);
-      Cookies.set("PublicKey", item.publickey);
-      Cookies.set("PrivateKey", item.privatekey);
+      // Cookies.set("AccountAddress", item.address);
+      // Cookies.set("PublicKey", item.publickey);
+      // Cookies.set("PrivateKey", item.privatekey);
+              this.SET_ACCOUNT({
+            PublicKey: item.publickey,
+            PrivateKey: item.privatekey,
+            AccountAddress: item.address,
+          });
     },
 
     chooseChain(chain) {
       Cookies.set("SourceChain", chain);
       this.getAllAccounts();
     },
+  },
+  computed: {
+    ...mapState("account", {
+      PublicKey: (state) => state.PublicKey,
+      PrivateKey: (state) => state.PrivateKey,
+      AccountAddress: (state) => state.AccountAddress,
+    }),
   },
 };
 </script>

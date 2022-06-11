@@ -211,7 +211,7 @@ export const asyncRoutes = [
           zh: {
             title: '调用合约'
           }, en: {
-            title: 'Call Contract'
+            title: 'Invoke Contract'
           }
         }
       },

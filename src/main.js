@@ -47,3 +47,5 @@ new Vue({
   i18n,
   render: h => h(App)
 })
+
+i18n.locale = store.state.language || 'en'// 默认显示英文 // set locale messages
